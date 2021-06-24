@@ -1,0 +1,81 @@
+﻿@inherits TicketsBase
+@page "/Tickets"
+@page "/Tickets/{CurrentTicket:int}"
+@attribute [Authorize]
+@inject IStringLocalizer<Tickets> Localizer
+@using DCx.Webshop.Pages.Tickets.Components
+@using Radzen.Blazor
+
+@using MatBlazor
+
+<div class="row">
+    <button class="btn btn-default" @onclick="@(()=> ShowCreateTicket())">Create ticket</button>
+</div>
+
+<div class="row tickets_content" style="margin-top:20px;">
+    <AuthorizeView Roles="admin">
+        <Authorized>
+            <div class="flex_column">
+                <div class="flex_row">
+                    @foreach (var filter in filters)
+                    {
+                        <div class="margin_10">
+                            <div class="align_text"><b>@Localizer[filter.Category]</b></div>
+                            <RadzenDropDown AllowClear="true"
+                                            @bind-Value=@filter.Selected
+                                            Multiple="true"
+                                            Placeholder="@filter.Category"
+                                            Data=@filter.Values
+                                            MaxSelectedLabels="2"
+                                            TextProperty="Value"
+                                            ValueProperty="Value" />
+                        </div>
+
+                    }
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-darkgreen btn_send_reply" style="margin:10px;" @onclick="(() => FilterTickets())">@Localizer["Filter"]</button>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%;">
+        <label class="btn nav_tab @(GetClass("Open"))">
+            <input type="radio" @onclick="@(() => SelectTab("Open"))" name="options" id="option1" autocomplete="off" checked> @Localizer["OpenCases"]
+        </label>
+        <label class="btn nav_tab @(GetClass("Closed"))">
+            <input type="radio" @onclick="@(() => SelectTab("Closed"))" name="options" id="option2" autocomplete="off"> @Localizer["ClosedCases"]
+        </label>
+        <label class="btn nav_tab @(GetClass("All"))">
+            <input type="radio" @onclick="@(() => SelectTab("All"))" name="options" id="option3" autocomplete="off"> @Localizer["AllCases"]
+        </label>
+    </div>
+
+
+    @if (tickets == null)
+    {
+        <div class="spinner-box">
+            <div class="pulse-container">
+                <div class="pulse-bubble pulse-bubble-1"></div>
+                <div class="pulse-bubble pulse-bubble-2"></div>
+                <div class="pulse-bubble pulse-bubble-3"></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (tickets.Count < 1)
+        {
+            <div class="p-3 mb-2 bg-primary text-white" style=" width: 100%;">
+                No data
+            </div>
+        }
+        else
+        {
+            <TicketList Tickets="@tickets" LoadTickets="@(()=>LoadTickets())" CurrentTicket="@CurrentTicket"></TicketList>
+        }
+    }
+
+</div>
+
+@*<CreateTicket Products="@products" IsVisible="@IsVisible"></CreateTicket>*@

@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Address" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>zurück</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Ort</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Firma</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Warenkorb</value>
+  </data>
+  <data name="Desktop" xml:space="preserve">
+    <value>Desktop</value>
+  </data>
+  <data name="double count" xml:space="preserve">
+    <value>double count</value>
+  </data>
+  <data name="Email Address" xml:space="preserve">
+    <value>Email Adresse</value>
+  </data>
+  <data name="First Name" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Hosting type" xml:space="preserve">
+    <value>Hosting type</value>
+  </data>
+  <data name="Invoice" xml:space="preserve">
+    <value>Rechnung</value>
+  </data>
+  <data name="Lan" xml:space="preserve">
+    <value>Lokales Network</value>
+  </data>
+  <data name="Last Name" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Lizenzen</value>
+  </data>
+  <data name="License CHF" xml:space="preserve">
+    <value>Lizenz CHF</value>
+  </data>
+  <data name="License type" xml:space="preserve">
+    <value>Lizenz typ</value>
+  </data>
+  <data name="Locsics" xml:space="preserve">
+    <value>Ressource</value>
+  </data>
+  <data name="MenuLicense" xml:space="preserve">
+    <value>Lizenzen</value>
+  </data>
+  <data name="MenuOverview" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>vorwärts</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Bestellung</value>
+  </data>
+  <data name="Overview" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Payroll(Lohn)" xml:space="preserve">
+    <value>LohnXT</value>
+  </data>
+  <data name="Period" xml:space="preserve">
+    <value>Periode</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Preis exkl. MwSt</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Produkt</value>
+  </data>
+  <data name="Product type" xml:space="preserve">
+    <value>Produkt Typ</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Qty" xml:space="preserve">
+    <value>Menge</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Menge</value>
+  </data>
+  <data name="Rent Asp" xml:space="preserve">
+    <value>Miete ASP</value>
+  </data>
+  <data name="Rent Install" xml:space="preserve">
+    <value>Rent Install</value>
+  </data>
+  <data name="Rent Month CHF" xml:space="preserve">
+    <value>Miete Monat CHF</value>
+  </data>
+  <data name="Rent Single" xml:space="preserve">
+    <value>Miete installiert</value>
+  </data>
+  <data name="Rent Year CHF" xml:space="preserve">
+    <value>Miete Jahr CHF</value>
+  </data>
+  <data name="Submit Payment" xml:space="preserve">
+    <value>Bestellen</value>
+  </data>
+  <data name="Tax(Steuern)" xml:space="preserve">
+    <value>Steuern</value>
+  </data>
+  <data name="Ticket" xml:space="preserve">
+    <value>Ticket</value>
+  </data>
+  <data name="Tickets" xml:space="preserve">
+    <value>Tickets</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="TS Max 3" xml:space="preserve">
+    <value>TS bis 3M</value>
+  </data>
+  <data name="TS Open" xml:space="preserve">
+    <value>TS unbeschränkt</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="up to 10 employees" xml:space="preserve">
+    <value>10 Mitarbeiter</value>
+  </data>
+  <data name="up to 100 employees" xml:space="preserve">
+    <value>100 Mitarbeiter</value>
+  </data>
+  <data name="up to 100 Ste" xml:space="preserve">
+    <value>100 Steuererklärungen</value>
+  </data>
+  <data name="up to 25 employees" xml:space="preserve">
+    <value>25 Mitarbeiter</value>
+  </data>
+  <data name="up to 25 Ste" xml:space="preserve">
+    <value>25 Steuererklärungen</value>
+  </data>
+  <data name="up to 250 employees" xml:space="preserve">
+    <value>250 Mitarbeiter</value>
+  </data>
+  <data name="up to 250 Ste" xml:space="preserve">
+    <value>250 Steuererklärungen</value>
+  </data>
+  <data name="up to 5 employees" xml:space="preserve">
+    <value>5 Mitarbeiter</value>
+  </data>
+  <data name="up to 50 employees" xml:space="preserve">
+    <value>50 Mitarbeiter</value>
+  </data>
+  <data name="up to 50 Ste" xml:space="preserve">
+    <value>50 Steuererklärungen</value>
+  </data>
+  <data name="up to 500 employees" xml:space="preserve">
+    <value>500 Mitarbeiter</value>
+  </data>
+  <data name="up to 500 Ste" xml:space="preserve">
+    <value>500 Steuererklärungen</value>
+  </data>
+  <data name="up to 999 employees" xml:space="preserve">
+    <value>999 Mitarbeiter</value>
+  </data>
+  <data name="up to 999 Ste" xml:space="preserve">
+    <value>999 Steuererklärungen</value>
+  </data>
+  <data name="Update CHF" xml:space="preserve">
+    <value>Update CHF</value>
+  </data>
+  <data name="Use License" xml:space="preserve">
+    <value>gemäss Lizenz</value>
+  </data>
+  <data name="Use Login" xml:space="preserve">
+    <value>gemäss Login</value>
+  </data>
+  <data name="Zip" xml:space="preserve">
+    <value>Plz</value>
+  </data>
+</root>

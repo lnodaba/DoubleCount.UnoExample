@@ -1,0 +1,324 @@
+﻿
+<style>
+    input[type='file'] {
+        color: transparent;
+    }
+</style>
+
+<div class="row col-md-12 col-sm-12 header_row">
+    <div class="col-md-1 col-sm-1">
+        <span>@Localizer["Number"]</span>
+    </div>
+    <div class="col-md-2 col-sm-2">
+        <span>@Localizer["CreationDate"]</span>
+    </div>
+    <div class="col-md-2 col-sm-2">
+        <span>@Localizer["LastActionDate"]</span>
+    </div>
+    <div class="col-md-3 col-sm-3">
+        <span>@Localizer["Subject"]</span>
+    </div>
+    <div class="col-md-3 col-sm-3">
+        <span>@Localizer["Product"]</span>
+    </div>
+</div>
+
+@foreach (var ticket in Tickets)
+{
+    <div id="accordion_@ticket.TicketNr" class="accordion_wrapper">
+        <div class="card">
+            <div class="card-header" id="heading_@ticket.TicketNr" data-toggle="collapse" data-target="#collapse_@ticket.TicketNr">
+                <div class="row ticket_row" @onclick="@(() => ChangeOpenClose(ticket.TicketNr))">
+                    <div class="col-md-1 col-sm-1">
+                        <span class="align_text">#@ticket.TicketNr</span>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <span class="align_text">@ticket.CreatedDate.ToString("dd.MM.yy HH:mm")</span>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <span class="align_text">@ticket.LastActionDate.ToString("dd.MM.yy HH:mm")</span>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <span class="align_text"><b>@ticket.Subject</b></span>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="product_name">
+                            <span class="align_text">@(ticket.Product != null ? ticket.Product.Name : "No product selected")</span>
+                        </div>
+                        <div class="btn btn-sm btn-primary open_ticket_btn" id="btn_@ticket.TicketNr">
+                            @Localizer["Open"]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="merge">
+                <div class="btn btn-sm btn-primary merge_ticket_btn" @onclick="@(() => OpenMergeTicketsModal(ticket.TicketNr))">
+                    @Localizer["Merge"]
+                </div>
+            </div>
+            <div id="collapse_@ticket.TicketNr" class="collapse @(CurrentTicket == ticket.TicketNr ? "show" : "")" aria-labelledby="heading_@ticket.TicketNr" data-parent="#accordion_@ticket.TicketNr">
+                <div class="reply_content">
+                    <div class="reply_wrapper col-sm-6">
+                        <div class="actions">
+                            @if (ticket.State == (int)State.Open)
+                            {
+                                <button class="btn btn-sm btn-darkgreen btn_reply" data-toggle="collapse" data-target="#collapseReply_@ticket.TicketNr" aria-expanded="false" aria-controls="collapseExample">
+                                    @Localizer["Reply"]
+                                </button>
+                            }
+                            <button class="btn btn-sm btn-primary" @onclick="(() => ChangeTicketState(ticket))">
+                                @(ticket.State == (int)State.Open ? Localizer["CloseTicket"] : Localizer["OpenTicket"])
+                            </button>
+                        </div>
+                        <div class="attachments_wrapper">
+                            @if (ticket.Attachments.Count > 0)
+                            {
+                                foreach (var file in ticket.Attachments)
+                                {
+                                    <div class="files">
+                                        <div class="file_icons">
+                                            <a class="open_attachment" target="_blank" href="/FileManager/OpenFile?ticketNr=@ticket.TicketNr&filename=@file.Filename&id=@file.Id">
+                                                <i class="fa fa-external-link-alt" aria-hidden="true"></i>
+                                            </a>
+                                            <a class="download_link" @onclick="(() => DownloadFile(ticket, file))">
+                                                <i class="fa fa-download" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                        <div class="filename">
+                                            @file.Filename
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="collapse write_reply" id="collapseReply_@ticket.TicketNr">
+                            <div class="card_body">
+                                <h7 class="card-title">Write your reply</h7>
+                                <AuthorizeView Roles="admin">
+                                    <Authorized>
+                                        <select class="form-control ticket_dropdown" @bind="@communication.Description">
+                                            <option value="0" selected>Select message</option>
+                                            @foreach (var message in messages)
+                                            {
+                                                <option value="@message.Message">@message.Label</option>
+                                            }
+                                        </select>
+                                    </Authorized>
+                                </AuthorizeView>
+                                <textarea rows="5" class="form-control" @bind="@communication.Description" placeholder="@Localizer["Description"]"></textarea>
+                                <div class="form-group row">
+                                    <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                                        <label for="fileUpload">Attachment</label>
+                                        <div class="">
+                                            <BlazorInputFile.InputFile OnChange="UploadFile" />
+                                            @if (file != null)
+                                            {
+                                                <strong>File selected: </strong>@file.Name
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (IsSaving)
+                                {
+                                    <button class="btn btn-darkgreen merge_btn spin btn_send_reply" disabled style="margin-right:10px;">
+                                        <span class="btn_spinner"></span>
+                                        Sending
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-darkgreen btn_send_reply" @onclick="@(()=>SendReply(ticket))">@Localizer["SendMessage"]</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="replys">
+                        @foreach (var reply in ticket.Communications.OrderByDescending(x => x.CreatedDate))
+                        {
+                            <div class="card_body">
+                                <span>@reply.CreatedDate.ToString("dd.MM.yy HH:mm")</span>
+                                <p>@reply.Description</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@inject IStringLocalizer<Tickets> Localizer
+@inject IJSRuntime jsRuntime
+@inject NavigationManager NavManager
+
+@using DCx.Webshop.Services;
+@using IdentityModel.Client;
+@using DCx.Webshop.Config;
+@using Microsoft.AspNetCore.Authentication;
+@using DCx.Webshop.Helpers;
+@using DCx.Webshop.Services.Tickets;
+
+@code {
+    [Parameter]
+    public List<Ticket> Tickets { get; set; }
+    [Inject]
+    private ITicketService ticketService { get; set; }
+    [Inject]
+    private PredefinedMessagesHandler predefinedMessagesHandler { get; set; }
+    [Inject]
+    private IMailService MailService { get; set; }
+    [Inject]
+    private OicdConfig OicdConfig { get; set; }
+    [Inject]
+    private IHttpContextAccessor HttpContextAccessor { get; set; }
+    [Inject]
+    private IFileHandler fileHandler { get; set; }
+    [Inject]
+    private TicketAttachmentsHelper ticketsHelper { get; set; }
+    [Parameter]
+    public EventCallback<bool> LoadTickets { get; set; }
+
+    [Parameter]
+    public int? CurrentTicket { get; set; }
+
+    [Inject]
+
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+
+    private bool CollapsedTicket { get; set; } = false;
+    private bool IsSaving { get; set; } = false;
+
+    private Attachment attachment = null;
+    private Communication communication = new Communication();
+    public License license = new License();
+
+    public List<PredefinedMessage> messages = new List<PredefinedMessage>();
+    public PredefinedMessage selectedMessage;
+
+    private IFileListEntry file;
+
+    protected async override Task OnInitializedAsync()
+    {
+        UserInfoResponse response = await GetUserInfo();
+        license = License.FromClaims(response.Claims);
+        messages = predefinedMessagesHandler.GetAll();
+    }
+
+    private async Task DownloadFile(Ticket ticket, Attachment attachment)
+    {
+        await fileHandler.DownloadFile(ticket, attachment, jsRuntime);
+    }
+
+    public async Task UploadFile(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+    }
+
+    private async void ChangeOpenClose(int ticketNr)
+    {
+        this.CollapsedTicket = !this.CollapsedTicket;
+
+        this.StateHasChanged();
+        await jsRuntime.InvokeVoidAsync("ChangeOpenClose", ticketNr, Localizer["Open"], Localizer["Close"]);
+    }
+
+    private async Task ChangeTicketState(Ticket ticket)
+    {
+        ticket.State = ticket.State == (int)State.Open ? (int)State.Closed : (int)State.Open;
+        ticketService.UpdateTicket(ticket);
+
+        this.CollapsedTicket = !this.CollapsedTicket;
+
+        await LoadTickets.InvokeAsync(true);
+
+        await jsRuntime.InvokeVoidAsync("CloseCollapsed", "ticket");
+        this.StateHasChanged();
+    }
+
+    private async Task SendReply(Ticket ticket)
+    {
+        IsSaving = true;
+        this.StateHasChanged();
+
+        UserInfoResponse response = await GetUserInfo();
+        license = License.FromClaims(response.Claims);
+
+        if (file != null)
+        {
+            attachment = await fileHandler.UploadFile(file, license, ticket.TicketNr);
+        }
+
+        communication.CreatedDate = DateTime.Now;
+        communication.CreatedBy = $"{license.FirstName} {license.LastName}";
+        ticket.Communications.Add(communication);
+        ticket.LastActionDate = DateTime.Now;
+        ticket.CreatedBy = $"{license.FirstName} {license.LastName}";
+
+        string filePath = string.Empty;
+        string attachmentLink = string.Empty;
+        if (attachment != null)
+        {
+            ticket.Attachments.Add(attachment);
+
+            string link = NavManager.BaseUri + $"FileManager/OpenFile?ticketNr={ticket.TicketNr}&filename={attachment.Filename}&id={attachment.Id}";
+            attachmentLink = $"You can view the attachment here: " + link;
+        }
+
+        ticketService.UpdateTicket(ticket);
+
+        await SendCommentMail(ticket, communication, attachmentLink);
+        IsSaving = false;
+
+        communication = new Communication();
+
+        await jsRuntime.InvokeVoidAsync("CloseCollapsed", "reply");
+        this.StateHasChanged();
+    }
+
+    private async void OpenMergeTicketsModal(int ticketNr)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(license.Email), license.Email);
+        parameters.Add("TicketState", (int)State.All);
+        parameters.Add("CurrentTicket", ticketNr);
+        parameters.Add("LoadTickets", LoadTickets);
+
+        await Modal.Show<MergeTicketsModal>("Merge tickets", parameters).Result;
+    }
+
+    public async Task SendCommentMail(Ticket ticket, Communication communication, string attachmentLink)
+    {
+        var ticketLink = NavManager.BaseUri + $"/Tickets/{ticket.TicketNr}";
+
+        MailLinks mailLinks = new MailLinks
+        {
+            TicketLink = ticketLink,
+            AttachmentLink = attachmentLink
+        };
+
+        var mailBody = MailTemplateService.GetTicketCommentEmail(ticket, license, communication, mailLinks);
+        var msgResult = await MailService.SendMsgAsync(license.Email, $"[Ticket #{ticket.TicketNr}] - New comment was added on {ticket.Subject}", mailBody);
+    }
+
+    private string GetQueryParameter(string parameter)
+    {
+        var uriBuilder = new UriBuilder(NavManager.Uri);
+        var queryString = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+        return queryString[parameter] ?? "";
+    }
+
+    private async Task<UserInfoResponse> GetUserInfo()
+    {
+        var client = new HttpClient();
+        var token = await HttpContextAccessor.HttpContext.GetTokenAsync("access_token");
+        var address = $"{OicdConfig.Authority}/connect/userinfo";
+
+        var response = await client.GetUserInfoAsync(new UserInfoRequest
+        {
+            Address = address,
+            Token = token
+        });
+
+        return response;
+    }
+}

@@ -1,0 +1,33 @@
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IHttpContextAccessor HttpContextAccessor
+@inject NavigationManager NavManager
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="brand-link" href="#">
+        <span style="margin-left: 7px; color:white;" class="brand-text font-weight-light">double count</span>
+    </a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link radius0" href="/Profile" Match="NavLinkMatch.All">
+                <i class="far fa-id-card"></i><span class="ml-2">Profile</span>
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

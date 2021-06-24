@@ -1,0 +1,22 @@
+.blueClass {
+    background-color: #222D5A !important;
+}
+
+.consent-box {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.lead, .form-check {
+    color: white;
+}
+
+.btn-darkgreen {
+    background-color: darkgreen;
+    border-color: darkgreen;
+    color:white;
+}
+
+    .btn-darkgreen:hover {
+        color: white;
+    }

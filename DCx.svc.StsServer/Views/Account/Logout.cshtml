@@ -1,0 +1,29 @@
+﻿@model LogoutViewModel
+@{
+    ViewData["Title"] = "Logout";
+    Layout = "_Layout";
+}
+<link href="~/css/logOutStyle.css" rel="stylesheet" />
+
+<div class="login-page blueClass">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="http://www.doublecount.ch/"><b style="color:white !important;">double count</b></a>
+        </div>
+        <div class="card">
+            <div class="card-body login-card-body">
+                <h4 class="login-box-msg">Are you sure you want to log out?</h4>
+                <form asp-action="Logout">
+                    <input type="hidden" name="logoutId" value="@Model.LogoutId" />
+                    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" name="button" value="logout" class="btn btn-primary btn-block">Logout</button>
+                            <button type="submit" name="button" value="cancel" class="btn btn-secondary btn-block">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,233 @@
+﻿@page "/CreateTicket"
+
+<style>
+    input[type='file'] {
+        color: transparent;
+    }
+</style>
+
+<h3>Create Ticket</h3>
+
+<div class="create_ticket_form">
+    <div class="col-sm-12">
+        <div class="form-group row">
+            <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                <label class="col-sm col-form-label">Subject</label>
+                <div class="col-sm">
+                    <input type="text" class="form-control" @bind="@ticket.Subject" placeholder="@Localizer[" Subject"]" aria-label="@Localizer[" Subject"]">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                <label class="col-sm col-form-label">Product</label>
+                <div class="col-sm">
+                    <select class="form-control" @bind="@SelectedProductId">
+                        <option value="0" selected>Select product</option>
+                        @foreach (var product in products)
+                        {
+                            <option value="@product.ID">@product.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        @if (SelectedProductId != default)
+        {
+            var hostings = products.FirstOrDefault(x => x.ID == SelectedProductId).Hostings;
+            <div class="form-group row">
+                <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                    <label class="col-sm col-form-label">Environment</label>
+                    <div class="col-sm">
+                        <select class="form-control" @bind="@SelectedHostingName">
+                            <option selected>Select environment</option>
+                            @foreach (var host in hostings)
+                            {
+                                <option value="@host.Name">@host.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="form-group row">
+            <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                <label class="col-sm col-form-label">Description</label>
+                <div class="col-sm">
+                    <textarea rows="5" class="form-control" @bind="@communication.Description" placeholder="@Localizer[" Description"]"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                <label for="fileUpload">Attachment</label>
+                <div class="">
+                    <BlazorInputFile.InputFile OnChange="UploadFile" />
+                    @if (file != null)
+                    {
+                        <div>
+                            <strong>File selected: </strong>@file.Name
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            @if (IsSaving)
+            {
+                <button class="btn btn-darkgreen save_btn spin" disabled style="margin-right:10px;">
+                    <span class="btn_spinner"></span>
+                    Saving
+                </button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-darkgreen" @onclick="@(()=> SaveTicket())" style="margin-right:10px;">Save</button>
+            }
+            <button type="reset" class="btn btn-secondary" @onclick="@(()=> ReturnToTickets())">Cancel</button>
+        </div>
+    </div>
+</div>
+
+@inject IStringLocalizer<Tickets> Localizer
+@using IdentityModel.Client;
+@using Microsoft.AspNetCore.Authentication;
+@using DCx.Webshop.Config;
+@using DCx.Webshop.Helpers;
+@using DCx.Webshop.Services;
+@using DCx.Webshop.Services.Tickets;
+@using System.IO;
+@using Microsoft.AspNetCore.Hosting;
+
+@attribute [Authorize]
+@code {
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+    [Inject]
+    private ITicketService ticketService { get; set; }
+    [Inject]
+    private IFileHandler fileHandler { get; set; }
+    [Inject]
+    private IProductRepo productRepo { get; set; }
+    [Inject]
+    private OicdConfig OicdConfig { get; set; }
+    [Inject]
+    private IHttpContextAccessor HttpContextAccessor { get; set; }
+    [Inject]
+    private IMailService MailService { get; set; }
+
+    [Inject]
+    private IWebHostEnvironment webHostEnvironment { get; set; }
+
+    [Inject]
+    private TicketAttachmentsHelper ticketsHelper { get; set; }
+
+    private IFileListEntry file;
+
+    public List<ProductItem> products { get; set; }
+    private Ticket ticket = new Ticket();
+    private License license = new License();
+    private Attachment attachment = new Attachment();
+    private Communication communication = new Communication();
+
+    private int _selectedProductId;
+    private int SelectedProductId
+    {
+        get => _selectedProductId;
+        set
+        {
+            _selectedProductId = value;
+            SelectedHostingName = default;
+        }
+    }
+    private bool IsSaving { get; set; } = false;
+    private string SelectedHostingName { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        products = productRepo.GetProducts();
+
+        UserInfoResponse response = await GetUserInfo();
+        license = License.FromClaims(response.Claims);
+    }
+
+    public async Task UploadFile(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+    }
+
+    private async Task<UserInfoResponse> GetUserInfo()
+    {
+        var client = new HttpClient();
+        var token = await HttpContextAccessor.HttpContext.GetTokenAsync("access_token");
+        var address = $"{OicdConfig.Authority}/connect/userinfo";
+
+        var response = await client.GetUserInfoAsync(new UserInfoRequest
+        {
+            Address = address,
+            Token = token
+        });
+
+        return response;
+    }
+
+    public void ReturnToTickets()
+    {
+        NavigationManager.NavigateTo("/Tickets", true);
+    }
+
+    public async Task SaveTicket()
+    {
+        IsSaving = true;
+        this.StateHasChanged();
+
+        ticket.TicketNr = ticketService.GetLastTicketNumber() + 1;
+
+        if (file != null)
+        {
+            attachment = await fileHandler.UploadFile(file, license, ticket.TicketNr);
+        }
+
+        var createdDate = DateTime.Now;
+
+        communication.CreatedBy = $"{license.FirstName} {license.LastName}";
+        communication.CreatedDate = createdDate;
+        ticket.Communications.Add(communication);
+
+        ticket.Email = license.Email;
+        ticket.CreatedDate = createdDate;
+        ticket.CreatedBy = $"{license.FirstName} {license.LastName}";
+        ticket.LastActionDate = createdDate;
+        ticket.Product = products.FirstOrDefault(x => x.ID == SelectedProductId);
+        ticket.State = (int)State.Open;
+
+        string attachmentLink = string.Empty;
+        if (attachment.Id != null)
+        {
+            string link = NavigationManager.BaseUri + $"FileManager/OpenFile?ticketNr={ticket.TicketNr}&filename={attachment.Filename}&id={attachment.Id}";
+            attachmentLink = $"You can view the attachment here: " + link;
+
+            ticket.Attachments.Add(attachment);
+        }
+
+        ticketService.SaveTicket(ticket);
+
+        await SendConfirmationMail(ticket, license, attachmentLink);
+        IsSaving = false;
+        NavigationManager.NavigateTo("/Tickets", true);
+    }
+
+    public async Task SendConfirmationMail(Ticket ticket, License license, string attachmentLink)
+    {
+        var ticketLink = NavigationManager.BaseUri + $"/Tickets/{ticket.TicketNr}";
+        MailLinks mailLinks = new MailLinks
+        {
+            TicketLink = ticketLink,
+            AttachmentLink = attachmentLink
+        };
+
+        var mailBody = MailTemplateService.GetTicketCreationEmail(ticket, license, mailLinks);
+        var msgResult = await MailService.SendMsgAsync(license.Email, $"[Ticket #{ticket.TicketNr}] - Ticket was created", mailBody);
+    }
+}

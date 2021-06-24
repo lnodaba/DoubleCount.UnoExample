@@ -1,0 +1,34 @@
+﻿.language-flag {
+    width: 20px;
+    cursor: pointer;
+    padding-right: 5px;
+}
+
+.selected-language {
+    font-weight: bold;
+}
+
+.deselected-language {
+    font-weight: normal;
+}
+
+.radius0 {
+    border-radius: 0 !important;
+}
+
+
+.sidebar-collapse #user-icon {
+    display: inline-block;
+}
+
+#user-icon {
+    display: none;
+}
+
+.user-panel a {
+    margin-left:10px;
+}
+
+.sidebar-collapse .user-panel a {
+    margin-left: 0px;
+}

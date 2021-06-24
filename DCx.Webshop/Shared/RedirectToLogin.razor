@@ -1,0 +1,9 @@
+﻿@inject NavigationManager nav
+@inject IHttpContextAccessor ContextAccessor
+@code {
+
+    protected override void OnInitialized()
+    {
+        nav.NavigateTo($"login?redirectUri={Uri.EscapeDataString(nav.Uri)}",true);
+    }
+}

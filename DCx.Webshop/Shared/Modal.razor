@@ -1,0 +1,16 @@
+﻿<div class="simple-form">
+    <p style="text-align:center;">@Message</p>
+    <br>
+    <button type="button" style="width:80px;" class="btn btn-darkgreen float-right" @onclick="@(()=>OK())">OK</button>
+</div>
+
+@code {
+
+    [CascadingParameter] 
+    BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter] 
+    public string Message { get; set; }
+
+    void OK() => BlazoredModal.Close();
+}

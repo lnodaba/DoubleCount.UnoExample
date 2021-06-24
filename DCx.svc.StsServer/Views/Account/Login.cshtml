@@ -1,0 +1,90 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+
+
+<div class="login-page blueClass">
+    <div class="login-box">
+        <partial name="_ValidationSummary" />
+        <div class="login-logo">
+            <a href="http://www.doublecount.ch/"><b style="color:white !important;">double count</b></a>
+        </div>
+        <div class="card">
+            @if (Model.EnableLocalLogin)
+            {
+                <div class="card-body login-card-body">
+                    <p class="login-box-msg">Sign in to start your session</p>
+                    <form asp-route="Login">
+                        <input type="hidden" asp-for="ReturnUrl" />
+                        <div class="input-group mb-3">
+                            <input class="form-control" placeholder="Email" asp-for="Email" autofocus>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-envelope"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input id="password-control" type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <i id="passwordSwitch" class="fa fa-lock" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            @if (Model.AllowRememberLogin)
+                            {
+                                <div class="col-8">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" id="remember">
+                                        <label for="remember">
+                                            Remember Me
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                            </div>
+                        </div>
+                        @if (Model.VisibleExternalProviders.Any())
+                        {
+                            <div class="social-auth-links text-center mb-3">
+                                <p>- OR -</p>
+                                @foreach (var provider in Model.VisibleExternalProviders)
+                                {
+                                    <a class="btn btn-block btn-primary"
+                                       asp-controller="External"
+                                       asp-action="Challenge"
+                                       asp-route-scheme="@provider.AuthenticationScheme"
+                                       asp-route-returnUrl="@Model.ReturnUrl">
+                                        <i class="fab fa-microsoft mr-2"></i> Sign in using @provider.DisplayName
+                                    </a>
+                                }
+                            </div>
+                        }
+                        <p class="mb-0">
+                            <button class="btn btn-link" name="button" value="register">Register</button>
+                        </p>
+                    </form>
+                </div>
+            }
+
+            @if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
+            {
+                <div class="alert alert-warning">
+                    <strong>Invalid login request</strong>
+                    There are no login schemes configured for this request.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <link href="~/css/login.css" rel="stylesheet" />
+    <script src="~/js/login.js"></script>
+}

@@ -1,0 +1,253 @@
+﻿.header_row {
+    background: #007BFF !important;
+    color: #FFF;
+    padding-left: 1.25rem;
+    padding-right: 0.25rem;
+}
+
+.tickets_wrapper {
+    background: #EEE;
+}
+
+.accordion_wrapper {
+    width: 100%;
+}
+
+    .accordion_wrapper .card {
+        border-radius: 0;
+        border-bottom: 0;
+    }
+
+        .accordion_wrapper .card .card-header {
+            cursor: pointer;
+        }
+    /*.accordion_wrapper .collapse {
+        background: #EEE !important;
+    }*/
+    .accordion_wrapper .card-header:first-child {
+        border-top: 0;
+    }
+
+    .accordion_wrapper .card-header {
+        border-top: 1px solid rgba(0,0,0,.125);
+    }
+
+.reply_content {
+    padding: 1.25rem 0;
+    padding-bottom: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+    .reply_content .reply_wrapper {
+        padding: 0 1.25rem;
+    }
+
+.reply_wrapper .actions {
+    margin-bottom: 10px;
+}
+
+.reply_wrapper .btn_send_reply {
+    /*margin-top: 10px;*/
+    margin-bottom: 15px;
+}
+
+.replys .card_body {
+    border-top: 1px solid black;
+    padding: 1.25rem;
+}
+
+    .replys .card_body:nth-child(odd) {
+        background: #EEE;
+    }
+
+.attachments_wrapper {
+    padding: 15px 0;
+}
+
+    .attachments_wrapper a:hover {
+        cursor: pointer;
+    }
+
+
+.save_btn, .merge_btn {
+    position: relative;
+}
+
+.actions .btn_reply {
+    margin-right: 10px;
+}
+
+.files {
+    margin-bottom: 5px;
+}
+
+    .files a.download_link:hover {
+        color: #0366d6;
+    }
+
+.spin {
+    padding-left: 2.5em;
+    display: block;
+}
+
+    /* position of the spinner when it appears, you might have to change these values */
+    .spin .btn_spinner {
+        left: -.6em;
+        top: .4em;
+        width: 2.5em;
+        display: block;
+        position: absolute;
+    }
+
+/* spinner animation */
+@keyframes btn_spinner_anim {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* The actual spinner element is a pseudo-element */
+.spin .btn_spinner::before {
+    content: "";
+    width: 1.5em; /* Size of the spinner */
+    height: 1.5em; /* Change as desired */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    border: solid .35em #999; /* Thickness/color of spinner track */
+    border-bottom-color: #555; /* Color of variant spinner piece */
+    animation: .8s linear infinite btn_spinner_anim; /* speed of spinner */
+    transform: translate(-50%, -50%);
+    will-change: transform;
+}
+
+/* optional, but it will affect the size if changed */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+
+.product_name {
+    float: left;
+    width: 50%;
+}
+
+.align_text {
+    vertical-align: sub;
+}
+
+.open_ticket_btn, .merge_ticket_btn {
+    cursor: pointer;
+}
+
+.merge_ticket_btn {
+}
+
+.files .file_icons {
+    float: left;
+}
+
+.files .filename {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.merge {
+    position: absolute;
+    right: 200px;
+    top: 12px;
+}
+
+
+/*Loader */
+.spinner-box {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    margin: 0 auto;
+}
+
+.pulse-container {
+    width: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pulse-bubble {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgb(5, 39, 103);
+}
+
+.pulse-bubble-1 {
+    animation: pulse .4s ease 0s infinite alternate;
+}
+
+.pulse-bubble-2 {
+    animation: pulse .4s ease .2s infinite alternate;
+}
+
+.pulse-bubble-3 {
+    animation: pulse .4s ease .4s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: .25;
+        transform: scale(.75);
+    }
+}
+
+/*Loader*/
+
+
+.modal_content {
+    width: 600px;
+}
+
+.ticket_dropdown {
+    width: 250px;
+}
+
+.modal_buttons {
+    width: auto;
+    float: right;
+    margin-top: 15px;
+}
+
+.merge_message {
+    margin-top: 10px;
+}
+
+.merge_btn {
+    margin-left: 10px;
+}
+
+.flex_row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex_column {
+    display: flex;
+    flex-direction: column;
+}
+
+.margin_10 {
+    margin: 10px;
+}

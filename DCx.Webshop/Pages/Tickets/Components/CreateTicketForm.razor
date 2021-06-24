@@ -1,0 +1,104 @@
+﻿
+<div class="create_ticket_form">
+    <div class="form-group row">
+        <label class="col-sm-12">Create ticket</label>
+    </div>
+    <div class="col-sm-12">
+        <div class="form-group row">
+            <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                <label class="col-sm col-form-label">Subject</label>
+                <div class="col-sm">
+                    <input type="text" class="form-control" @bind="@ticket.Subject" placeholder="@Localizer[" Subject"]" aria-label="@Localizer[" Subject"]">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                <label class="col-sm col-form-label">Product</label>
+                <div class="col-sm">
+                    <select class="form-control" @bind="@SelectedProductId">
+                        <option value="0" selected>Select product</option>
+                        @foreach (var product in products)
+                        {
+                            <option value="@product.ID">@product.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        @if (SelectedProductId != default)
+        {
+            var hostings = products.FirstOrDefault(x => x.ID == SelectedProductId).Hostings;
+            <div class="form-group row">
+                <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                    <label class="col-sm col-form-label">Environment</label>
+                    <div class="col-sm">
+                        <select class="form-control" @bind="@SelectedHostingName">
+                            <option selected>Select environment</option>
+                            @foreach (var host in hostings)
+                            {
+                                <option value="@host.Name">@host.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="form-group row">
+            <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                <label class="col-sm col-form-label">Description</label>
+                <div class="col-sm">
+                    <textarea rows="5" class="form-control" @bind="@communication.Description" placeholder="@Localizer[" Description"]"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            @*<button type="submit" class="btn btn-darkgreen" @onclick="@(()=>CreateTicket())" style="margin-right:10px;">Save</button>
+                <button type="reset" class="btn btn-secondary" @onclick="@(()=> ShowCreateTicket())">Cancel</button>*@
+        </div>
+    </div>
+</div>
+
+@inject IStringLocalizer<Tickets> Localizer
+@code {
+
+    [Parameter]
+    public List<ProductItem> products { get; set; }
+
+    private Ticket ticket = new Ticket();
+    private Communication communication = new Communication();
+
+    private int _selectedProductId;
+    private int SelectedProductId
+    {
+        get => _selectedProductId;
+        set
+        {
+            _selectedProductId = value;
+            SelectedHostingName = default;
+        }
+    }
+    private string SelectedHostingName { get; set; }
+
+    //public async Task CreateTicket()
+    //{
+    //    var createdDate = DateTime.Now;
+
+    //    communication.CreatedBy = string.Format("{0} {1}", license.FirstName, license.LastName);
+    //    communication.CreatedDate = createdDate;
+
+    //    ticket.CreatedDate = createdDate;
+    //    ticket.Communications.Add(communication);
+    //    ticket.Product = products.FirstOrDefault(x => x.ID == SelectedProductId);
+    //    ticket.State = "Open";
+
+    //    ticketService.SaveTicket(ticket);
+
+    //    var parameters = new ModalParameters();
+    //    parameters.Add("Message", "Ticket created successfully");
+
+    //    await Modal.Show<Modal>("Ticket created", parameters).Result;
+    //    ShowCreateTicket();
+    //}
+
+}

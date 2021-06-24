@@ -1,0 +1,348 @@
+﻿@inherits LicensesBase
+@page "/Licenses"
+@attribute [Authorize]
+
+@using MatBlazor
+
+@inject IStringLocalizer<Licenses> Localizer
+
+<div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%;">
+    <label class="btn nav_tab @(GetClass("Product"))">
+        <input type="radio" @onclick="@(() => SelectTab("Product"))" name="options" id="option1" autocomplete="off" checked> @Localizer["Product"]
+    </label>
+    <label class="btn nav_tab @(GetClass("License"))">
+        <input type="radio" @onclick="@(() => SelectTab("License"))" name="options" id="option2" autocomplete="off"> @Localizer["License"]
+    </label>
+    <label class="btn nav_tab @(GetClass("Invoice"))">
+        <input type="radio" @onclick="@(() => SelectTab("Invoice"))" name="options" id="option3" autocomplete="off"> @Localizer["Invoice"]
+    </label>
+    <label class="btn nav_tab @(GetClass("Complete"))">
+        <input type="radio" @onclick="@(() => SelectTab("Complete"))" name="options" id="option3" autocomplete="off"> @Localizer["Complete"]
+    </label>
+</div>
+
+@if (SelectedTab == "Product")
+{
+    <div class="row" style="padding-top:20px;">
+        <div class="col-sm-3">
+            <h3 class="card-title">@Localizer["Application"]</h3>
+            <br />
+            <hr class="solid">
+            <br />
+            <div class="form-group clearfix">
+                <MatRadioGroup @bind-Value="@selectedProduct" Items="@(products)">
+                    <ItemTemplate>
+                        <div class="infoClass">
+                            <MatRadioButton Value="@context">@Localizer[@context.Name]</MatRadioButton>
+                        </div>
+                    </ItemTemplate>
+                </MatRadioGroup>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <h3 class="card-title">@Localizer["Quantity"]</h3>
+            <br />
+            <hr class="solid">
+            <br />
+            @if (selectedProduct.Quantities.Any())
+            {
+                <MatRadioGroup @bind-Value="@selectedProduct.Quantity" Items="@selectedProduct.Quantities">
+                    <ItemTemplate>
+                        <div class="infoClass quantityColumn">
+                            <MatRadioButton Value="@context" Style="text-align:right;color:blue">
+                                <div class="content-right">@Localizer[@context.Name]</div>
+                            </MatRadioButton>
+                        </div>
+                    </ItemTemplate>
+                </MatRadioGroup>
+            }
+            else
+            {
+                <p>-</p>
+            }
+        </div>
+        <div class="col-sm-3">
+            <h3 class="card-title amethyst">@Localizer["License type"]</h3>
+            <br />
+            <hr class="solid">
+            <br />
+            @if (selectedProduct.Hostings.Any())
+            {
+                <MatRadioGroup @bind-Value="@selectedProduct.Hosting" Items="@(selectedProduct.Hostings)">
+                    <ItemTemplate>
+                        <div class="infoClass">
+                            <MatRadioButton Value="@context"> @Localizer[@context.Name]</MatRadioButton>
+                        </div>
+                    </ItemTemplate>
+                </MatRadioGroup>
+            }
+            else
+            {
+                <p>-</p>
+            }
+        </div>
+        <div class="col-sm-3">
+            <h3 class="card-title">@Localizer["Price"]</h3>
+            <br />
+            <hr class="solid">
+            <br />
+            <div class="form-group">
+                @if (selectedProduct.Prices.Any())
+                {
+                    @foreach (var price in selectedProduct.Prices)
+                    {
+                        <label style="margin-top: 6px;font-weight: 600;">@Localizer[@price?.licenseOption?.Name] <span style="text-align: right;font-weight: 600;"> @price?.ProRata</span></label> <br />
+                    }
+                }
+                else
+                {
+                    <label style="margin-top: 6px;font-weight: 600;">-</label> <br />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-top:20px;">
+        <div class="col-sm-12">
+            <div>
+                <button type="submit" class="btn btn-darkgreen float-right" @onclick="@(() => SelectTab("License"))">
+                    @Localizer["Next"] &nbsp;<i class="fas fa-caret-square-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+}
+@if (SelectedTab == "License")
+{
+    <div id="licenses" class="row" style="padding-top:25px;">
+        <div class="col-sm-12">
+            <EditForm Model="@license" Context="licenseContext">
+                <DataAnnotationsValidator />
+                <div class="form-group row">
+                    <MatCheckbox @bind-Value="@useLoginFlag" style="margin-left:-11px;" @oninput="eventArgs => { UseLogineClick(eventArgs.Value); }">@Localizer["Use Login"]</MatCheckbox>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Email Address"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLoginFlag" class="form-control" @bind-Value="@license.Email" placeholder="@Localizer["Email Address"]"></InputText>
+                            <ValidationMessage For="@(() => license.Email)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["First Name"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLoginFlag" class="form-control" @bind-Value="@license.FirstName" placeholder="@Localizer["First Name"]"></InputText>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => license.FirstName)" />
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Last Name"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLoginFlag" class="form-control" @bind-Value="@license.LastName" placeholder="@Localizer["Last Name"]"></InputText>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => license.LastName)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Address"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLoginFlag" class="form-control" @bind-Value="@license.Address" placeholder="@Localizer["Address"]"></InputText>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => license.Address)" />
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Company"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLoginFlag" class="form-control" @bind-Value="@license.Company" placeholder="@Localizer["Company"]"></InputText>
+                            <ValidationMessage For="@(() => license.Company)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                        <div class="row" style="padding: 15px 15px 15px 0;">
+                            <div class="col-4" style="padding-left: 0px;">
+                                <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Zip"]</label>
+                                <InputText disabled="@useLoginFlag" id="lastName" class="form-control" @bind-Value="@license.Zip" placeholder="@Localizer["Zip"]"></InputText>
+                                <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => license.Zip)" />
+                            </div>
+                            <div class="col-8" style="padding-right: 15px;">
+                                <label for="inputEmail3" class="col-sm col-form-label">@Localizer["City"]</label>
+                                <InputText disabled="@useLoginFlag" class="form-control" @bind-Value="@license.City" placeholder="@Localizer["City"]"></InputText>
+                                <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => license.City)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-default" @onclick="@(() => SelectTab("Product"))">
+                    <i class="fas fa-caret-square-left"></i>&nbsp;@Localizer["Back"]
+                </button>
+                <button type="submit" class="btn btn-darkgreen float-right" @onclick="@(() => NextLicense(licenseContext))">
+                    @Localizer["Next"] &nbsp;<i class="fas fa-caret-square-right"></i>
+                </button>
+            </EditForm>
+        </div>
+    </div>
+}
+@if (SelectedTab == "Invoice")
+{
+    <div id="invoices" class="row" style="padding-top:25px;">
+        <div class="col-sm-12">
+            <EditForm Model="@invoice" Context="InvoiceContext">
+                <DataAnnotationsValidator />
+                <div class="form-group row">
+                    <MatCheckbox @bind-Value="@useLicenseFlag" style="margin-left:-11px;" @oninput="eventArgs => { UseLicenseClick(eventArgs.Value); }"> @Localizer["Use License"]</MatCheckbox>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group  col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label"> @Localizer["Email Address"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLicenseFlag" class="form-control" @bind-Value="@invoice.Email" placeholder="@Localizer["Email Address"]"></InputText>
+                            <ValidationMessage For="@(() => invoice.Email)" />
+                        </div>
+                    </div>
+                    <div class="form-group  col-sm-12 col-md-6 col-xl-5">
+                    </div>
+                </div>
+                <div class="form-group row">
+
+                    <div class="form-group  col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["First Name"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLicenseFlag" class="form-control" @bind-Value="@invoice.FirstName" placeholder="@Localizer["First Name"]"></InputText>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => invoice.FirstName)" />
+                        </div>
+                    </div>
+                    <div class="form-group  col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Last Name"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLicenseFlag" class="form-control" @bind-Value="@invoice.LastName" placeholder="@Localizer["Last Name"]"></InputText>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => invoice.LastName)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group  col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Address"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLicenseFlag" class="form-control" @bind-Value="@invoice.Address" placeholder="@Localizer["Address"]"></InputText>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => invoice.Address)" />
+                        </div>
+                    </div>
+                    <div class="form-group  col-sm-12 col-md-6 col-xl-5">
+                        <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Company"]</label>
+                        <div class="col-sm">
+                            <InputText disabled="@useLicenseFlag" class="form-control" @bind-Value="@invoice.Company" placeholder="@Localizer["Company"]"></InputText>
+                            <ValidationMessage For="@(() => invoice.Company)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                        <div class="row" style="padding: 15px 15px 15px 0;">
+                            <div class="col-4" style="padding-left: 0px;">
+                                <label for="inputEmail3" class="col-sm col-form-label">@Localizer["Zip"]</label>
+                                <InputText disabled="@useLicenseFlag" class="form-control" @bind-Value="@invoice.Zip" placeholder="@Localizer["Zip"]"></InputText>
+                                <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => invoice.Zip)" />
+                            </div>
+                            <div class="col-8" style="padding-right: 15px;">
+                                <label for="inputEmail3" class="col-sm col-form-label">@Localizer["City"]</label>
+                                <InputText disabled="@useLicenseFlag" class="form-control" @bind-Value="@invoice.City" placeholder="@Localizer["City"]"></InputText>
+                                <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => invoice.City)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col">
+                    </div>
+                </div>
+                <button class="btn btn-default" @onclick="@(() => SelectTab("License"))">
+                    <i class="fas fa-caret-square-left"></i>&nbsp;@Localizer["Back"]
+                </button>
+                <button type="submit" class="btn btn-darkgreen float-right " @onclick="@(() => NextInvoice(InvoiceContext))">
+                    @Localizer["Next"] &nbsp;<i class="fas fa-caret-square-right"></i>
+                </button>
+            </EditForm>
+        </div>
+    </div>
+}
+@if (SelectedTab == "Complete")
+{
+    <div class="container-fluid" style="padding-top:20px;">
+        <div class="row">
+            <div class="col-12">
+                <div class="invoice p-3 mb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>
+                                <i class="fas fa-shopping-cart"></i>@Localizer["double count"]
+                                <small class="float-right">@Period</small>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row invoice-info">
+                        <div class="col-sm-4 invoice-col">
+                            @Localizer["License"]
+                            <address>
+                                <strong>@license.Company</strong><br>
+                                <strong>@license.FirstName @license.LastName</strong><br>
+                                @license.Address<br />
+                                @license.Zip @license.City<br />
+                                @license.Email
+                            </address>
+                        </div>
+                        <div class="col-sm-4 invoice-col">
+                            @Localizer["Invoice"]
+                            <address>
+                                <strong>@invoice.Company</strong><br>
+                                <strong>@invoice.FirstName @invoice.LastName</strong><br>
+                                @invoice.Address<br />
+                                @invoice.Zip @invoice.City<br />
+                                @invoice.Email
+                            </address>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>@Localizer["Application"]</th>
+                                        <th>@Localizer["Quantity"]</th>
+                                        <th>@Localizer["License type"]</th>
+                                        <th>@Localizer["Period"]</th>
+                                        <th>@Localizer["Price"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var price in selectedProduct.Prices)
+                                    {
+                                        <tr>
+                                            <td>@Localizer[@selectedProduct.Name]</td>
+                                            <td>@selectedProduct.Quantity.Value</td>
+                                            <td>@Localizer[@selectedProduct.Hosting.Name]</td>
+                                            <td>@(price.HasPeriod ? price.Period : "")</td>
+                                            <td>@Localizer[@price?.licenseOption?.Name] @price?.ProRata</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <button class="btn btn-default" @onclick="@(() => SelectTab("Invoice"))">
+                                <i class="fas fa-caret-square-left"></i>&nbsp;@Localizer["Back"]
+                            </button>
+                            <button type="button" class="btn btn-darkgreen float-right" @onclick="@(()=>OrderNow())">
+                                <i class="far fa-credit-card"></i>&nbsp;@Localizer["Submit Payment"]
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

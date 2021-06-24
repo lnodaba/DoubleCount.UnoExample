@@ -1,0 +1,57 @@
+﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IHttpContextAccessor HttpContextAccessor
+@inject NavigationManager NavManager
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+<link href="/css/NavMenu.css" rel="stylesheet" />
+<div class="main">
+    <div class="top-row px-4">
+        <span class="d-block">
+            <i class="fas fa-user-tie"></i>
+            <i>@UserEmail</i>
+        </span>
+        <ul class="navbar-nav ml-auto d-inline">
+            <li class="nav-item d-inline">
+                <a @onclick="@(() => switchLanguage("de"))" class="language-flag @setActive("de")">de</a>
+            </li>
+            <li class="nav-item d-inline">
+                <a @onclick="@(() => switchLanguage("en-US"))" class=" language-flag @setActive("en-US")">en</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
+@code{
+    private string UserEmail = "not logged in";
+    private string language;
+    private string currentUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUrl = NavManager.Uri;
+        language = System.Globalization.CultureInfo.CurrentCulture.Name;
+        var result = await HttpContextAccessor.HttpContext.AuthenticateAsync();
+        if (result.Succeeded)
+            UserEmail = result.Principal.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+    }
+
+    protected void switchLanguage(string code)
+    {
+        language = code;
+        var returnUrl = NavManager.Uri.Replace(NavManager.BaseUri, "");
+
+        returnUrl = HttpUtility.UrlEncode($"/{returnUrl}");
+        var codeEncoded = HttpUtility.UrlEncode(code);
+
+        NavManager.NavigateTo($"Language?culture={codeEncoded}&returnUrl={returnUrl}", true);
+    }
+
+    public string setActive(string _language)
+        => language == _language ? "selected-language" : "deselected-language";
+}

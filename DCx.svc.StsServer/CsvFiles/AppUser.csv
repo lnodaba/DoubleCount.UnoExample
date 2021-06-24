@@ -1,0 +1,5 @@
+Id;SubjectId;UserName;Email;Password;ProviderName;ProviderSubjectId;Role
+1;7312f566-306c-43c9-9fd7-ef19dbf7ec95;test;test@email.com;L/sTBkxZx7hJ0BVRneiohk/ImBgP6PFx+Y3Z1ydqaCI=;;member;
+2;aa7692b0-cae2-4f7e-a704-86117cdb4ed0;lnodaba;lnodaba@yahoo.com;L/sTBkxZx7hJ0BVRneiohk/ImBgP6PFx+Y3Z1ydqaCI=;;admin;
+3;4145b957-8e35-496a-aa19-9db3e8d2172d;lnodaba2;lnodaba@hotmail.com;L/sTBkxZx7hJ0BVRneiohk/ImBgP6PFx+Y3Z1ydqaCI=;;member;
+4;0f8eda76-7ed3-410a-aff5-9383be838e92;test_user;akarmi@yahoo.com;L/sTBkxZx7hJ0BVRneiohk/ImBgP6PFx+Y3Z1ydqaCI=;;member;

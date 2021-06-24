@@ -1,0 +1,16 @@
+﻿<h3></h3>
+
+@inject NavigationManager nav
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var returnUrl = nav.Uri.Replace(nav.BaseUri, "");
+        var url = $"Account/Login?returnUrl=/{System.Web.HttpUtility.UrlEncode(returnUrl)}";
+
+        nav.NavigateTo(url, true);
+
+        await Task.CompletedTask;
+    }
+}

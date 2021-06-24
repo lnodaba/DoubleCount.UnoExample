@@ -1,0 +1,19 @@
+﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IHttpContextAccessor HttpContextAccessor
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+<link href="/css/NavMenu.css" rel="stylesheet" />
+<div class="main">
+    <div class="top-row px-4">
+        <span class="d-block">
+        </span>
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
+

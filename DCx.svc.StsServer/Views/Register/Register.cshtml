@@ -1,0 +1,57 @@
+﻿@model DCx.StsServer.Controllers.Account.Model.RegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_LayoutRegister";
+}
+
+<div class="main">
+    <partial name="_ValidationSummary" />
+    <div class="container">
+        <form method="POST" class="appointment-form" id="appointment-form">
+            <h2>Register</h2>
+            <div class="form-group-1">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <input asp-for="Email" class="form-control" placeholder="eMail" required />
+
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <input asp-for="FirstName" class="form-control" placeholder="First Name / Vorname" required />
+
+                <span asp-validation-for="LastName" class="text-danger"></span>
+                <input asp-for="LastName" class="form-control" placeholder="Last Name / Nachname" required />
+
+                <span asp-validation-for="Password" class="text-danger"></span>
+                <input asp-for="Password" class="form-control" type="password" required placeholder="Password / Passwort" />
+
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                <input asp-for="ConfirmPassword" class="form-control" type="password" required placeholder="Confirm password / Passwort Bestätigung" />
+
+                <span asp-validation-for="Company" class="text-danger"></span>
+                <input asp-for="Company" class="form-control" placeholder="Company / Firma" required />
+
+                <span asp-validation-for="Address" class="text-danger"></span>
+                <input asp-for="Address" class="form-control" placeholder="Address / Adresse" required />
+
+                <span asp-validation-for="Zip" class="text-danger"></span>
+                <input asp-for="Zip" class="form-control" placeholder="Zip / PLZ" required />
+
+                <span asp-validation-for="City" class="text-danger"></span>
+                <input asp-for="City" class="form-control" placeholder="City / Ortschaft" required />
+
+                <span asp-validation-for="Phone" class="text-danger"></span>
+                <input id="phone-field" asp-for="Phone" class="form-control" type="tel" required placeholder="Mobile N° (verification code / Bestätiungscode)" />
+
+                <input type="hidden" asp-for="ReturnUrl" class="form-control" />
+            </div>
+
+            <div class="form-submit">
+                <button type="submit" id="submit" class="submit" name="button" value="register">Register</button>
+                <button id="cancel-button" class="submit float-right" name="button" value="cancel">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+

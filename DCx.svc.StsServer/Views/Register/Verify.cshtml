@@ -1,0 +1,26 @@
+﻿@model DCx.StsServer.Controllers.Account.Model.VerifyModel
+
+@{
+    ViewData["Title"] = "Verify";
+    Layout = "_LayoutRegister";
+}
+
+<div class="main">
+    <div class="container">
+        <form method="POST" class="appointment-form" id="appointment-form">
+            <h2>Confirmation code</h2>
+            @if (Model.SmsFailed)
+            {
+                <span class="text-danger">@Model.UnlockCode </span>
+            }
+            @if (!Model.ErrMessage.IsBlank())
+            {
+                <span asp-validation-for="UnlockCode" class="text-danger">@Model.ErrMessage </span>
+            }
+            <input name="UnlockCode" required placeholder="Confirmation Code sent to @Model.Phone" />
+            <div class="form-submit">
+                <button type="submit" id="submit" class="submit" name="button" value="register">Confirm</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+﻿@page "/"
+@page "/Index"
+@inject IStringLocalizer<Index> Localizer
+<style>
+    .order-card {
+        color: #fff;
+    }
+
+    .card {
+        border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+        box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+        border: none;
+        margin-bottom: 30px;
+        -webkit-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .card .card-block {
+            padding: 25px;
+        }
+
+    .order-card i {
+        font-size: 26px;
+    }
+
+    .f-left {
+        float: left;
+    }
+
+    .f-right {
+        float: right;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <a href="/Licenses" style="text-decoration:none;">
+            <div class="card bg-info order-card">
+                <div class="card-block">
+                    <i class="fa fa-cart-plus f-left"></i>
+                    <h2><span class="f-right">@Localizer["Order"]</span></h2>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <a href="/Tickets" style="text-decoration:none;">
+            <div class="card bg-success order-card">
+                <div class="card-block">
+                    <i class="fas fa-id-badge fa-lg f-left"></i>
+                    <h2><span class="f-right">@Localizer["Ticket"]</span></h2>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+@code {
+}

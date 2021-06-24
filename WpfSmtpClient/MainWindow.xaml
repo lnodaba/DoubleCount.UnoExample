@@ -1,0 +1,74 @@
+﻿<Window x:Class="WpfSmtpClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DCx.WpfSmtpClient"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="800">
+
+
+    <Window.DataContext>
+        <local:MainVM/>
+    </Window.DataContext>
+
+    <Grid Margin="6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="90"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Button     Grid.Row="0"  Grid.Column="0"   Command="{Binding FxSmtpSendCmd}" Margin="2,2,2,2"  >fx send</Button>
+        <Button     Grid.Row="0"  Grid.Column="1"   Command="{Binding CsSmtpSendCmd}" Margin="2,2,110,2">cs send</Button>
+
+        <TextBlock  Grid.Row="2"  Grid.Column="0"   Text="Host"/>
+        <TextBlock  Grid.Row="3"  Grid.Column="0"   Text="Port"/>
+        <TextBlock  Grid.Row="4"  Grid.Column="0"   Text="Username"/>
+        <TextBlock  Grid.Row="5"  Grid.Column="0"   Text="Password"/>
+        <TextBlock  Grid.Row="6"  Grid.Column="0"   Text="UseSSL"/>
+        <TextBlock  Grid.Row="7"  Grid.Column="0"   Text="NameFrom"/>
+        <TextBlock  Grid.Row="8"  Grid.Column="0"   Text="AdrTO"/>
+        <TextBlock  Grid.Row="9"  Grid.Column="0"   Text="AdrCC"/>
+        <TextBlock  Grid.Row="10" Grid.Column="0"   Text="AdrBCC"/>
+        <TextBlock  Grid.Row="11" Grid.Column="0"   Text="MsgSubj"/>
+        <TextBlock  Grid.Row="12" Grid.Column="0"   Text="MsgBody"/>
+
+        <TextBox    Grid.Row="2"  Grid.Column="1"   Height="20" Text="{Binding Path=Host,       Mode=TwoWay}"/>
+        <TextBox    Grid.Row="3"  Grid.Column="1"   Height="20" Text="{Binding Path=Port,       Mode=TwoWay}" Margin="0,2,165,2"/>
+        <TextBox    Grid.Row="4"  Grid.Column="1"   Height="20" Text="{Binding Path=Username,   Mode=TwoWay}"/>
+        <TextBox    Grid.Row="5"  Grid.Column="1"   Height="20" Text="{Binding Path=Password,   Mode=TwoWay}"/>
+        <CheckBox   Grid.Row="6"  Grid.Column="1"   Height="20" IsChecked="{Binding UseSSL,     Mode=TwoWay}"/>
+        <TextBox    Grid.Row="7"  Grid.Column="1"   Height="20" Text="{Binding Path=NameFrom,   Mode=TwoWay}"/>
+        <TextBox    Grid.Row="8"  Grid.Column="1"   Height="20" Text="{Binding Path=AdrTO,      Mode=TwoWay}"/>
+        <TextBox    Grid.Row="9"  Grid.Column="1"   Height="20" Text="{Binding Path=AdrCC,      Mode=TwoWay}"/>
+        <TextBox    Grid.Row="10" Grid.Column="1"   Height="20" Text="{Binding Path=AdrBCC,     Mode=TwoWay}"/>
+        <TextBox    Grid.Row="11" Grid.Column="1"   Height="20" Text="{Binding Path=MsgSubj,    Mode=TwoWay}"/>
+        <TextBox    Grid.Row="12" Grid.Column="1"               Text="{Binding Path=MsgBody,    Mode=TwoWay}" Margin="0,2"
+                    Grid.RowSpan="2" AcceptsReturn="True"/>
+
+        <ListBox Grid.Row="1"
+                 Margin="5,0"
+                 Grid.RowSpan="99"
+                 Grid.Column="2"
+                 Background="WhiteSmoke"
+                 ItemsSource="{Binding MsgList}"/>
+
+    </Grid>
+</Window>

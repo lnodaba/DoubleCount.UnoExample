@@ -1,0 +1,45 @@
+DCx.svc.Extensions
+- modified StringExtenstions
+  > [DebuggerStepThrough] attribute
+- modified ByteArrayExtenstions
+  > [DebuggerStepThrough] attribute
+
+- included all used IdentityModel files as sources
+
+
+
+DCx.svc.CsvStore
+- removed Package System.ComponentModel.Annotations (4.7.0)
+
+DCx.StsServer
+- removed Package Microsoft.VisualStudio.Web.CodeGeneration.Design (3.1.3)
+- added await Task.CompletedTask in calls to avoid warning
+
+DCx.StsServer.CsvIdentityStore
+- removed Package System.ComponentModel.Annotations (4.7.0)
+- added await Task.CompletedTask in calls to avoid warning
+- Setup/Clients 
+  changed config of WPFClient 
+    > RequirePkce = true
+    > added comment about redirections
+
+
+DCx.svc.AppServer
+- added await Task.CompletedTask in calls to avoid warning
+
+DCx.win.CfgLicClient
+- removed Auto-generate binding redirects in Project Properties
+
+DCx.win.CfgLicClient.Test
+- removed Auto-generate binding redirects in Project Properties
+
+
+DCx.win.WpfClient
+- removed IdentityModel.AspNetCore (2.0.0)
+- added   IdentityModel (5.0.0-preview.0)
+
+TestApiClient
+//using JsonTextReader sr = new JsonTextReader(new StringReader(responseJson));
+//var records = new JsonSerializer().Deserialize<List<WeatherForecast>>(sr);
+
+  var records         = JsonSerializer.Deserialize<List<WeatherForecast>>(responseJson);

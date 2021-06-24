@@ -1,0 +1,112 @@
+﻿@page "/profile"
+@attribute [Authorize]
+<div id="licenses" class="row" style="padding-top:25px;">
+    <div class="col-sm-12">
+        <EditForm Model="profile" Context="profileContext" OnValidSubmit=@ValidFormSubmitted>
+            <DataAnnotationsValidator />
+
+            <div class="form-group row">
+                <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                    <label for="inputEmail3" class="col-sm col-form-label">Email Address</label>
+                    <div class="col-sm">
+                        <InputText id="lastName" class="form-control" @bind-Value="@profile.Email" placeholder="Email Address" readonly></InputText>
+                        <ValidationMessage For="@(() => profile.Email)" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                    <label for="inputEmail3" class="col-sm col-form-label">First Name</label>
+                    <div class="col-sm">
+                        <InputText id="lastName" class="form-control" @bind-Value="@profile.FirstName" placeholder="First Name"></InputText>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => profile.FirstName)" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                    <label for="inputEmail3" class="col-sm col-form-label">Last Name</label>
+                    <div class="col-sm">
+                        <InputText id="lastName" class="form-control" @bind-Value="@profile.LastName" placeholder="Last Name"></InputText>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => profile.LastName)" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                    <label for="inputEmail3" class="col-sm col-form-label">Address</label>
+                    <div class="col-sm">
+                        <InputText id="lastName" class="form-control" @bind-Value="@profile.Address" placeholder="Address"></InputText>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => profile.Address)" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                    <label for="inputEmail3" class="col-sm col-form-label">Company</label>
+                    <div class="col-sm">
+                        <InputText id="lastName" class="form-control" @bind-Value="@profile.Company" placeholder="Company"></InputText>
+                        <ValidationMessage For="@(() => profile.Company)" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-sm-12 col-md-6 col-xl-5">
+                    <div class="row" style="padding:15px;">
+                        <div class="col-4" style="padding-left: 15px;">
+                            <label for="inputEmail3" class="col-sm col-form-label" style="padding-left:0px;">Zip</label>
+                            <InputText id="lastName" class="form-control" @bind-Value="@profile.Zip" placeholder="Zip"></InputText>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => profile.Zip)" />
+                        </div>
+                        <div class="col-8" style="padding-right: 15px;">
+                            <label for="inputEmail3" class="col-sm col-form-label" style="padding-left:0px;">City</label>
+                            <InputText id="lastName" class="form-control" @bind-Value="@profile.City" placeholder="City"></InputText>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => profile.City)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Save</button>
+        </EditForm>
+    </div>
+</div>
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IProfileRepository profileRepository
+@inject IUserRepository userRepository
+@inject NavigationManager NavManager
+
+@code {
+    protected string ReturnUrl = string.Empty;
+
+    protected IdentityResult Result;
+    protected UserProfile profile = new UserProfile();
+    private string UserEmail = String.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        NavManager.TryGetQueryString<string>("returnUrl", out ReturnUrl);
+
+        var result = await HttpContextAccessor.HttpContext.AuthenticateAsync();
+        if (result.Succeeded)
+        {
+            string subjectID = result.Principal.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
+            UserEmail = userRepository.FindBySubjectId(subjectID)?.Email;
+        }
+
+        if (!string.IsNullOrEmpty(UserEmail))
+        {
+            profile = profileRepository.FindByEmail(UserEmail) ?? new UserProfile()
+            {
+                Email = UserEmail
+            };
+        }
+    }
+
+    void ValidFormSubmitted(EditContext editContext)
+    {
+        Result = profileRepository.CreateOrUpdate(profile);
+    }
+
+    public void goBack()
+    {
+        NavManager.NavigateTo(ReturnUrl ?? "/", true);
+    }
+}
+
+

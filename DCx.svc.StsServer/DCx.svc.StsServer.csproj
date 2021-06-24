@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>DCx.StsServer</RootNamespace>
+    <AssemblyName>DCx.svc.StsServer</AssemblyName>
+    <SatelliteResourceLanguages>en;de</SatelliteResourceLanguages>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <DisableImplicitAspNetCoreAnalyzers>true</DisableImplicitAspNetCoreAnalyzers>
+    <UserSecretsId>8d62f091-998f-4c5b-97f6-e32983c5e901</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityServer4" Version="4.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="5.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" Condition="'$(Configuration)' == 'Debug'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DCx.svc.Extensions\DCx.lib.Extensions.csproj" />
+    <ProjectReference Include="..\DCx.svc.StsServer.CsvIdentityStore\DCx.lib.CsvIdentityStore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="CsvFiles\AppUser.csv">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="DCx.StsServer.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

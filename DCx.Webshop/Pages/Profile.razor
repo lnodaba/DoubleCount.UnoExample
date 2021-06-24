@@ -1,0 +1,18 @@
+﻿@page "/Profile"
+@inject NavigationManager NavManager
+@attribute [Authorize]
+
+<h3>Profile</h3>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        var returnUrl = HttpUtility.UrlEncode($"{NavManager.BaseUri}");
+        var toUri = Setup.Resources.GetIniValue("oicd", "Authority");
+
+        NavManager.NavigateTo($"{toUri}/Profile?returnUrl={returnUrl}", forceLoad: true);
+
+        await Task.CompletedTask;
+    }
+}

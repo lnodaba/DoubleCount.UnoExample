@@ -1,0 +1,69 @@
+﻿@page "/register"
+
+<h3>Register</h3>
+
+<form>
+    <div class="form-group row">
+        <label for="inputUsername" class="col-sm-2 col-form-label">Username</label>
+        <div class="col-sm-4">
+            <input type="text" @bind-value="Model.UserName" class="form-control" id="inputUsername" placeholder="Username">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-4">
+            <input type="email" @bind-value="Model.Email" class="form-control" id="inputEmail3" placeholder="Email">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+        <div class="col-sm-4">
+            <input type="password" @bind-value="Model.Password" class="form-control" id="inputPassword3" placeholder="Password">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword3" class="col-sm-2 col-form-label">Confirm Password</label>
+        <div class="col-sm-4">
+            <input type="password" @bind-value="ConfirmPassword" class="form-control" id="inputPassword3" placeholder="Confirm Password">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword3" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4">
+            <button type="button" @onclick="OnRegister" class="btn btn-primary">Register</button>
+        </div>
+    </div>
+    @if (Result != null && !Result.Succeeded)
+    {
+        <div class="alert alert-danger" role="alert">
+           @GetError()
+        </div>
+    }
+</form>
+
+@inject IUserRepository userRepository
+@inject NavigationManager NavigationManager
+
+@code {
+    protected AppUser Model = new AppUser();
+    protected string ConfirmPassword;
+    protected IdentityResult Result;
+
+
+
+    protected void OnRegister()
+    {
+        Result = userRepository.Create(Model, ConfirmPassword);
+        if (Result == IdentityResult.Success)
+        {
+            NavigationManager.NavigateTo("profile");
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.NavigateTo("Register/Register",true);
+    }
+
+    protected string GetError() => string.Join(Environment.NewLine, Result.Errors.ToList().Select(x => x.Description));
+}

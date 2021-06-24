@@ -1,0 +1,109 @@
+﻿
+<div class="simple-form modal_content">
+    <p style="text-align:left;">Select ticket to be merged</p>
+    <br>
+    <div class="content_wrapper">
+        <select class="form-control ticket_dropdown" @bind="@SelectedTicketNr">
+            <option value="0" selected>Select ticket</option>
+            @foreach (var ticket in tickets)
+            {
+                if (ticket.TicketNr == CurrentTicket)
+                {
+                    <option value="@ticket.TicketNr" style="background:#eee;" disabled>#@ticket.TicketNr - @ticket.Subject</option>
+                }
+                else
+                {
+                    <option value="@ticket.TicketNr">#@ticket.TicketNr - @ticket.Subject</option>
+                }
+            }
+        </select>
+        <div class="merge_message">
+            @if (IsMerged)
+            {
+                <span>Ticket nr. @CurrentTicket was merged into ticket  nr. @SelectedTicketNr</span>
+            }
+        </div>
+    </div>
+    <div class="modal_buttons">
+        <button type="button" style="width:80px;" class="btn btn-darkgreen float-left" @onclick="@(()=>Cancel())">Cancel</button>
+        @if (IsSaving)
+        {
+            <button class="btn btn-darkgreen float-right merge_btn spin" disabled>
+                <span class="btn_spinner"></span>
+                Merging
+            </button>
+        }
+        else
+        {
+            <button type="button" style="width:80px;" class="btn btn-darkgreen float-right merge_btn" disabled="@(SelectedTicketNr == 0)"
+                    @onclick="@(()=>MergeTickets())">
+                Merge
+            </button>
+        }
+    </div>
+</div>
+
+@using DCx.Webshop.Services.Tickets;
+@code {
+
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+    [Inject]
+    private ITicketService ticketService { get; set; }
+
+    private List<Ticket> tickets { get; set; }
+
+    [Parameter]
+    public string Email { get; set; }
+    [Parameter]
+    public int TicketState { get; set; }
+    [Parameter]
+    public int CurrentTicket { get; set; }
+    [Parameter]
+    public EventCallback<bool> LoadTickets { get; set; }
+
+    private bool IsSaving { get; set; } = false;
+    private bool IsMerged { get; set; } = false;
+
+    private int _selectedTicketNr;
+    private int SelectedTicketNr
+    {
+        get => _selectedTicketNr;
+        set
+        {
+            _selectedTicketNr = value;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        tickets = ticketService.GetTickets(TicketState, Email);
+    }
+
+    public async Task MergeTickets()
+    {
+        IsSaving = true;
+        this.StateHasChanged();
+
+        var currentTicket = tickets.FirstOrDefault(x => x.TicketNr == CurrentTicket);
+        if (SelectedTicketNr != 0)
+        {
+            var selectedTicket = tickets.FirstOrDefault(x => x.TicketNr == SelectedTicketNr);
+
+            selectedTicket.Communications.InsertRange(selectedTicket.Communications.Count, currentTicket.Communications);
+            ticketService.UpdateTicket(selectedTicket);
+
+            currentTicket.State = (int)State.Closed;
+            ticketService.UpdateTicket(currentTicket);
+
+            IsSaving = false;
+            IsMerged = true;
+
+            await LoadTickets.InvokeAsync(true);
+            this.StateHasChanged();
+        }
+
+    }
+
+    void Cancel() => BlazoredModal.Close();
+}

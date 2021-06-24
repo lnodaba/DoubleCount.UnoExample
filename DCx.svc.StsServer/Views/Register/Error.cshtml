@@ -1,0 +1,16 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "Error";
+    Layout = "_LayoutRegister";
+}
+
+<div class="main">
+    <div class="container">
+        <form method="POST" class="appointment-form" id="appointment-form">
+            <h2>One or more error occured!</h2>
+            <h2>@Model</h2>
+            <button id="cancel-button" class="submit float-right" name="button" value="cancel">Go Home</button>
+        </form>
+    </div>
+</div>
